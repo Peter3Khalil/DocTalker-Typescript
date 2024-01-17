@@ -10,7 +10,6 @@ import InputField, { PasswordField } from '@/components/InputField';
 import { useForm } from 'react-hook-form';
 import { SignupSchema } from '@/utils/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useFetch from '@/hooks/useFetch';
 import { useMutation } from 'react-query';
 import client from '@/utils/axios-util';
 

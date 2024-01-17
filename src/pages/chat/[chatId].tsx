@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react"
+import React, {  useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import ChatContainer from "@/components/chat/ChatContainer"
 import PDFViewer from "@/components/chat/PDFViewer"
@@ -29,7 +29,8 @@ useEffect(() => {
     console.log(error)
     router.push("/404")
  })
-}, [chatId])
+}, [chatId, router])
+
 //TODO: Make it mobile responsive
   return (
     <DashboardLayout>
