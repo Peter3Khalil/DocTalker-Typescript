@@ -1,27 +1,26 @@
 import InputField, { PasswordField } from '@/components/InputField';
 import Button from '@/components/shared/Button';
 import Logo from '@/components/shared/Logo';
+import client from '@/utils/axios-util';
 import { cn } from '@/utils/helperFunctions';
 import { LoginSchema } from '@/utils/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-
-const loginUser = async (user) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const { data } = await axios.post(`${baseUrl}/user/login`, user);
-  return data;
-}
+import { useMutation } from 'react-query';
 
 const Login = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [serverError, setServerError] = useState('');
+  const [error,setError] = useState<any>(null)
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return client.post('/user/login', data);
+    },
+  });
+  const {  isLoading } = mutation;
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(LoginSchema),
     mode: 'onTouched',
@@ -29,24 +28,18 @@ const Login = () => {
 
   const { errors, isValid } = formState;
   const onSubmit = async (data) => {
-    setIsLoading(true);
-    setServerError('');
-    setIsSuccess(false);
+    setError(null)
     try {
-      const res = await loginUser(data);
-      setIsLoading(false);
-      setIsSuccess(true);
-      localStorage.setItem('token', res.token);
-      setTimeout(() => {
+      const res = await mutation.mutateAsync(data);
+      if (res.token) {
         router.push('/');
-      }, 1000);
-      console.log(res);
+        localStorage.setItem('token', res.token);
+        return;
+      }
+      console.log(res)
+      setError("Invalid Credentials")
     } catch (error) {
-      setServerError("Invalid Credentials");
-      console.log(error);
-      setIsLoading(false);
-    } finally{
-      setIsLoading(false);
+      setError(error)
     }
   };
   return (
@@ -58,7 +51,7 @@ const Login = () => {
           </h1>
           <p className="text-gray-600">Please Login to continue</p>
         </div>
-        {serverError && <p className="text-md text-red-500">{serverError}</p>}
+        {error && <p className="text-md text-red-500">{error}</p>}
         <form
           className="flex w-full flex-col items-center gap-4"
           onSubmit={handleSubmit(onSubmit)}
@@ -104,11 +97,6 @@ const Login = () => {
         </Link>
       </div>
 
-      {isSuccess && (
-        <div className="fixed z-10 flex h-full w-full items-center justify-center bg-muted opacity-50">
-          <AiOutlineLoading3Quarters className="animate-spin text-4xl text-primary" />
-        </div>
-      )}
     </main>
   );
 };

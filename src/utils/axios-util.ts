@@ -15,7 +15,7 @@ client.interceptors.request.use((config) => {
 client.interceptors.response.use((response) => {
   return response.data;
 }, (error) => {
-  return Promise.reject(error.response.message||error.response.data);
+  return error.response.message||error.response.data;
 });
 
 export default client;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from '@/components/shared/Logo';
 import Button from '@/components/shared/Button';
 import Link from 'next/link';
@@ -20,7 +20,8 @@ const Signup = () => {
       return client.post('/user/signup', data);
     },
   });
-  const { error, isLoading } = mutation;
+  const { isLoading } = mutation;
+  const [error, setError] = useState<any>(null);
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(SignupSchema),
     mode: 'onTouched',
@@ -29,14 +30,16 @@ const Signup = () => {
   const onSubmit = async (data) => {
     try {
       const res = await mutation.mutateAsync(data);
-      console.log(res);
       if (res.token) {
         router.push('/');
         localStorage.setItem('token', res.token);
         return;
       }
+      console.log(res);
+      setError(res);
     } catch (error) {
       console.log(error);
+      setError(error);
     }
   };
   return (

@@ -9,30 +9,20 @@ import ChatList from './ChatList';
 import { AppDispatch, RootState } from '@/redux/store';
 import { toggleSidebar } from '@/redux/slices/sidebar';
 import { Chat } from './ChatItem';
-import axios from 'axios';
+import client from '@/utils/axios-util';
+import { useQuery } from 'react-query';
 
-const fetchChats = async () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const token = localStorage.getItem('token');
-  const { data } = await axios.get(`${baseUrl}/chat`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+const fetchChats =  () => {
+  return  client.get('/chat');
 }
 const Sidebar = () => {
   const { isOpened } = useSelector((state: RootState) => state.sidebar);
   const dispatch: AppDispatch = useDispatch();
+  const {data} = useQuery('chats', fetchChats)
   const [chats, setChats] = useState<Chat[]>([])
 useEffect(() => {
-  fetchChats().then(data=>{
-    console.log(data)
-    setChats(data)
-  }).catch(error=>{
-    console.log(error)
-  })
-},[])
+setChats(data)
+},[data])
   return (
     <aside
       className={cn(

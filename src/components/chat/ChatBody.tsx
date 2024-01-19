@@ -4,16 +4,17 @@ import MessageBox from './MessageBox';
 import { cn } from '../../utils/helperFunctions';
 import { RootState } from '@/redux/store';
 
-const ChatBody = ({ res }) => {
+const ChatBody = () => {
   const {isOpened} = useSelector((state:RootState) => state.document);
-
+  const {messages} = useSelector((state: RootState) => state.messages);
   useEffect(() => {
     const chatBody = document.getElementById('chatBody');
     if (!chatBody) return;
     chatBody.scrollTop = chatBody.scrollHeight;
-  }, [res]);
+  }, [messages]);
 
   console.log('ChatBody');
+  console.log(messages);
   return (
     <div
       id="chatBody"
@@ -26,8 +27,8 @@ const ChatBody = ({ res }) => {
           'lg:max-w-[60%]': !isOpened,
         })}
       >
-        {res?.map((message, index) => (
-          <MessageBox key={index} message={message} />
+        {messages?.map((message, index) => (
+          <MessageBox key={index} message={message.content} isBot={message.role==="assistant"}/>
         ))}
       </div>
     </div>

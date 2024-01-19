@@ -1,22 +1,50 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { cn } from '../../utils/helperFunctions';
-import { IoSend } from '../shared/Icons';
+import { AiOutlineLoading3Quarters, IoSend } from '../shared/Icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { RootState } from '@/redux/store';
+import { setQuery } from '@/redux/slices/query';
+import { addMessage } from '@/redux/slices/messages';
+import { useMutation } from 'react-query';
+import client from '@/utils/axios-util';
+import { useRouter } from 'next/router';
 const ChatFooter = () => {
   const { isOpened } = useSelector((state: RootState) => state.document);
-  const [message, setMessage] = useState('');
+  const router = useRouter();  
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return client.post('/query/query-process', data);
+    },
+  });
+  const { isLoading } = mutation;
+  const {message} = useSelector((state: RootState) => state.query);
+  const dispatch = useDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const isDisabled = message.trim() == '';
+  const isDisabled =message.trim() === '' || isLoading;
   const handleOnchange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+    dispatch(setQuery(e.target.value));
   };
   const handleOnSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (message.trim() === '') return;
-    setMessage('');
+    dispatch(addMessage({
+     content:message,
+      role:"user"
+    }))
+    dispatch(setQuery(""));
+    //Submit query
+    try {
+      const {response}:{response:any[]} = await mutation.mutateAsync({query:message,id:router.query.chatId})
+      const content = response.map(item=>item.content).join("")
+      dispatch(addMessage({
+        role:"assistant",
+        content
+      }))
+    } catch (error) {
+      console.log(error)
+    }
   };
   const handleOnfocus = () => {
     const form = document.getElementById('form');
@@ -37,7 +65,7 @@ const ChatFooter = () => {
   useEffect(() => {
     if (textareaRef.current) textareaRef.current.focus();
   }, []);
-
+console.log(isLoading)
   return (
     <div
       className={cn('flex w-full shrink-0 items-center justify-center p-2', {
