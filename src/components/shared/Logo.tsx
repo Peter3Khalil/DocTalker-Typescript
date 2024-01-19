@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 type LogoProps = React.HTMLAttributes<HTMLSpanElement>;
 const Logo: FC<LogoProps> = (props) => {
   return (
-    <span {...props} className="font-bold">
+    <span {...props} className={`font-bold ${props.className}`}>
       <Doc className="mr-1" />
       Talker
     </span>

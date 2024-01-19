@@ -1,29 +1,32 @@
-import {
-  GlobeAltIcon,
-  LightningBoltIcon,
-  ScaleIcon
-} from "@heroicons/react/outline";
+import { HiOutlineAnnotation , HiGlobeAlt , } from "react-icons/hi";
+import { RxLightningBolt } from "react-icons/rx";
+import { FaBalanceScale } from "react-icons/fa";
 
 const features = [
   {
-    name: "14-day free trial",
+    name: "Support PDF file",
     description:
-      "Embark on a journey of enhanced productivity and document management with our exclusive 14-day free trial of Doctalker !",
-    icon: GlobeAltIcon,
+      "You can upload your PDF files and ask questions to the chatbot and chatbot will answer your questions.",
+    icon: HiGlobeAlt,
   },
   {
-    name: "Premium setup support",
+    name: "Star message (Soon)",
     description:
-      "Customers can experience all the benefits free of charge by selecting the 14-day trial. Cancel anytime!",
-    icon: ScaleIcon,
+      "You can star your messages and save them for later",
+    icon: FaBalanceScale,
   },
   {
-    name: "Over 30+ reports",
+    name: "Chat with Multiple Files (Soon)",
     description:
-      "Real-time adherence reports are available on the multiple factors of website.",
-    icon: LightningBoltIcon,
+      "You can send multiple files to the chatbot and chatbot will answer your questions based on the files.",
+    icon: RxLightningBolt,
   },
- 
+  {
+    name: "Support Multiple Languages (Soon)",
+    description:
+      "You can chat with the chatbot in multiple languages.",
+    icon: HiOutlineAnnotation,
+  },
 ];
 
 export default function Features() {
@@ -31,17 +34,14 @@ export default function Features() {
     <div className="mb-12 py-12 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center py-10">
-          <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">
-            Doctalker
-          </h2>
+         
           <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            A better way to manage Documents
+            A better way to study well
           </p>
           <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-          What sets Doctalker apart is its built-in question-answering feature, 
-          powered by cutting-edge natural language processing technology. Simply type your questions,
-          and Doctalker intelligently scans your documents to provide instant and accurate answers.
-          This eliminates the need for manual searching and speeds up your decision-making process.
+            Doctalker is a web application that helps you to study with your
+            documents. You can upload your documents and ask questions to the Ai
+            and Ai will answer your questions.
           </p>
         </div>
 
@@ -50,7 +50,7 @@ export default function Features() {
             {features.map((feature) => (
               <div key={feature.name} className="relative">
                 <dt>
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-accent text-accent-foreground">
                     <feature.icon className="h-6 w-6" aria-hidden="true" />
                   </div>
                   <p className="ml-16 text-lg leading-6 font-medium text-gray-900">
