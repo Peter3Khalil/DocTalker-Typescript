@@ -3,6 +3,18 @@ import { cn } from '../../utils/helperFunctions';
 import { Doc } from '../shared/Logo';
 import { FaUser } from '../shared/Icons';
 
+const formatText = (text: string) => {
+  //Replace all - with •
+  const lines = text.split('\n');
+  lines.forEach((line, index) => {
+    if (line.startsWith('-')) {
+      lines[index] = line.replace('-', '•');
+    }
+  });
+  text = lines.join('\n');
+  return text;
+}
+
 type MessageBoxProps = {
   message: string;
   isBot?: boolean;
@@ -36,7 +48,7 @@ const MessageBox:FC<MessageBoxProps> = ({ message, isBot = false }) => {
           <h1 className="text-md font-bold leading-none">
             {isBot ? 'Talker' : 'You'}
           </h1>
-          <p className="break-all text-sm">{message}</p>
+          <p className="break-before-all text-sm whitespace-pre-line">{message.startsWith("Typing")?<h1 className='text-lg animate-pulse font-bold'>Typing...</h1>: formatText(message)}</p>
         </div>
       </div>
     </div>

@@ -16,9 +16,9 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({
 }) => {
   return (
     <ProtectedRoutes>
-      <div className={`flex h-full w-full`}>
+      <div className={`flex h-full w-full `}>
         <Sidebar />
-        <div className="flex h-full flex-1 flex-col gap-2 overflow-y-auto overflow-x-hidden bg-background">
+        <div className="flex h-full flex-1 flex-col gap-2 overflow-y-auto  bg-background">
           <Header isChatPage={isChatPage} />
           {children}
         </div>

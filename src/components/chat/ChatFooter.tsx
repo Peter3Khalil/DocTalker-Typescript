@@ -6,7 +6,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { RootState } from '@/redux/store';
 import { setQuery } from '@/redux/slices/query';
-import { addMessage } from '@/redux/slices/messages';
+import { addMessage, popMessage } from '@/redux/slices/messages';
 import { useMutation } from 'react-query';
 import client from '@/utils/axios-util';
 import { useRouter } from 'next/router';
@@ -36,12 +36,14 @@ const ChatFooter = () => {
     dispatch(setQuery(""));
     //Submit query
     try {
-      const {response}:{response:any[]} = await mutation.mutateAsync({query:message,id:router.query.chatId})
-      const content = response.map(item=>item.content).join("")
       dispatch(addMessage({
-        role:"assistant",
-        content
+        content:"Typing...",
+        role:"assistant"
       }))
+      const {response}:{response:any[]} = await mutation.mutateAsync({query:message,id:router.query.chatId})
+      console.log(response)
+      dispatch(popMessage())
+      dispatch(addMessage(response))
     } catch (error) {
       console.log(error)
     }

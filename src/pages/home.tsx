@@ -1,22 +1,32 @@
-import React, { useEffect } from 'react'
-import client from '@/utils/axios-util'
+import CTA from "@/components/landingPageComponents/CTA";
+import Features from "@/components/landingPageComponents/Features";
+import Footer from "@/components/landingPageComponents/Footer";
+import Hero from "@/components/landingPageComponents/Hero";
+import Statistics from "@/components/landingPageComponents/Statistics";
+import Testimonials from "@/components/landingPageComponents/Testimonials";
+import Head from "next/head";
 
-const Home = () => {
-  useEffect(() => {
-    client.post("/user/signup",{
-      "email":"peter@gmail.com",
-      "password":"",
-      "firstName":"",
-      "lastName":"",
-    }).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }, [])
+
+export default function Home() {
   return (
-    <div>Home</div>
-  )
-}
+    <div>
+      <Head>
+        <title>Doctalker - Doctalker documents Management </title>
+        <meta
+          name="description"
+          content="Doctalker - Doctalker documents Management"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-export default Home
+      <main>
+        <Hero />
+        <Features />
+        <Statistics />
+        <Testimonials />
+        <CTA />
+        <Footer />
+      </main>
+    </div>
+  );
+}

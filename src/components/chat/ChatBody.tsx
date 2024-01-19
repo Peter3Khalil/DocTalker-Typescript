@@ -13,8 +13,6 @@ const ChatBody = () => {
     chatBody.scrollTop = chatBody.scrollHeight;
   }, [messages]);
 
-  console.log('ChatBody');
-  console.log(messages);
   return (
     <div
       id="chatBody"

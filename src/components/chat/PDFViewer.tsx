@@ -13,6 +13,7 @@ const PDFViewer:FC<PDFViewerProps> = ({ url }) => {
       className={cn('h-full flex-1', {
         hidden: !isOpened,
       })}
+      id='pdf'
     >
       <iframe
         src={`https://docs.google.com/viewer?url=${url}&embedded=true`}

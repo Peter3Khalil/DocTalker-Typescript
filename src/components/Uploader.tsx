@@ -1,5 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
-import { AiOutlineLoading3Quarters, FaCloudUploadAlt, FaFilePdf, MdDeleteForever } from './shared/Icons';
+import {
+  AiOutlineLoading3Quarters,
+  FaCloudUploadAlt,
+  FaFilePdf,
+  MdDeleteForever,
+} from './shared/Icons';
 import Button from './shared/Button';
 import { cn } from '../utils/helperFunctions';
 import 'tippy.js/dist/tippy.css';
@@ -15,13 +20,22 @@ const uploadFile = async (file: File) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const formData = new FormData();
   formData.append('file', file);
-  const { data } = await axios.post(`${baseUrl}/upload/upload`, formData,{
-    headers:{
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
+  const { data } = await axios.post(`${baseUrl}/upload/upload`, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
   });
   return data;
-}
+};
+const processFile = async (chatId: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const { data } = await axios.post(`${baseUrl}/upload/process`, {id:chatId}, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  return data;
+};
 const Uploader = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +49,6 @@ const Uploader = () => {
   const MaxFileSize = 5; // 5MB
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(file);
     setIsLoading(true);
     setServerError('');
     setIsSuccess(false);
@@ -44,11 +57,16 @@ const Uploader = () => {
       const res = await uploadFile(file);
       setIsLoading(false);
       setIsSuccess(true);
-      console.log(res);
+      processFile(res.chatId).then(res=>{
+        console.log(res)
+      }).catch(error=>{
+        console.log(error)
+      })
       router.push(`/chat/${res.chatId}`);
       //TODO: Save user data in State
     } catch (error) {
       setServerError(error.response.data.error || error.response.data.message);
+      alert(error.response.data.error || error.response.data.message);
       console.log(error);
       setIsLoading(false);
     } finally {
@@ -110,7 +128,7 @@ const Uploader = () => {
         onDragOver={handleOnDragOver}
         onDrop={handleOnDrop}
         htmlFor="input"
-        className="flex w-full cursor-pointer flex-col items-center gap-2 rounded border-2 border-dashed border-primary bg-accent py-12 px-6 text-accent-foreground dark:border-foreground/50"
+        className="flex w-full cursor-pointer flex-col items-center gap-2 rounded border-2 border-dashed border-primary bg-accent px-6 py-12 text-accent-foreground dark:border-foreground/50"
       >
         <FaCloudUploadAlt className="text-4xl text-primary" />
         <p className="text-md font-semibold text-accent-foreground">
@@ -162,6 +180,7 @@ const Uploader = () => {
         ) : (
           'Upload'
         )}
+
       </Button>
     </form>
   );

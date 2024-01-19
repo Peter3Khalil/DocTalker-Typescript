@@ -5,7 +5,7 @@ import { cn } from '../../utils/helperFunctions';
 
 const ChatContainer = () => {  
   return (
-    <div className={cn('relative  flex h-full flex-1 flex-col gap-2 pb-3 pt-4')}>
+    <div id='chat' className={cn('relative  flex h-full flex-1 flex-col gap-2 pb-3 pt-4')}>
       <ChatBody />
       <ChatFooter  />
     </div>

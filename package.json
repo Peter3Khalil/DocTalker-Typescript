@@ -12,6 +12,8 @@
     "eslint": "eslint src/**/*.{js,jsx,ts,tsx}  --fix"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
     "@hookform/resolvers": "^3.3.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@tippyjs/react": "^4.2.6",
