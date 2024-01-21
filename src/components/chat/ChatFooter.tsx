@@ -78,7 +78,7 @@ const ChatFooter = () => {
   return (
     <div
       className={cn('flex w-full shrink-0 items-center justify-center p-2', {
-        'mx-auto lg:max-w-[60%]': !isOpened,
+        'mx-auto lg:max-w-[50%]': !isOpened,
       })}
     >
       <form

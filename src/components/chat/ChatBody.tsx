@@ -22,7 +22,7 @@ const ChatBody = () => {
     >
       <div
         className={cn('flex h-full w-full flex-col gap-2', {
-          'lg:max-w-[60%]': !isOpened,
+          'lg:max-w-[50%]': !isOpened,
         })}
       >
         {messages?.map((message, index) => (
