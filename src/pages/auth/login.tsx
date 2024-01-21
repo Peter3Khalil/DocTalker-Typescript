@@ -14,13 +14,13 @@ import { useMutation } from 'react-query';
 
 const Login = () => {
   const router = useRouter();
-  const [error,setError] = useState<any>(null)
+  const [error, setError] = useState<any>(null);
   const mutation = useMutation({
     mutationFn: (data) => {
       return client.post('/user/login', data);
     },
   });
-  const {  isLoading } = mutation;
+  const { isLoading } = mutation;
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(LoginSchema),
     mode: 'onTouched',
@@ -28,7 +28,7 @@ const Login = () => {
 
   const { errors, isValid } = formState;
   const onSubmit = async (data) => {
-    setError(null)
+    setError(null);
     try {
       const res = await mutation.mutateAsync(data);
       if (res.token) {
@@ -36,10 +36,10 @@ const Login = () => {
         localStorage.setItem('token', res.token);
         return;
       }
-      console.log(res)
-      setError("Invalid Credentials")
+      console.log(res);
+      setError('Invalid Credentials');
     } catch (error) {
-      setError(error)
+      setError(error);
     }
   };
   return (
@@ -47,7 +47,7 @@ const Login = () => {
       <div className="flex w-[400px] flex-col items-center gap-4 rounded p-2 ">
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-2xl font-bold">
-            Welcome to <Logo />
+            Welcome to <Link href={`/home`}><Logo /></Link> 
           </h1>
           <p className="text-gray-600">Please Login to continue</p>
         </div>
@@ -85,18 +85,17 @@ const Login = () => {
             {isLoading ? (
               <AiOutlineLoading3Quarters className="animate-spin text-2xl" />
             ) : (
-              "Login"
+              'Login'
             )}
           </Button>
         </form>
 
         <Link href={'/auth/signup'}>
           <p className="text-md text-primary">
-           Create new account: <span className="font-bold">Signup</span>
+            Create new account: <span className="font-bold">Signup</span>
           </p>
         </Link>
       </div>
-
     </main>
   );
 };

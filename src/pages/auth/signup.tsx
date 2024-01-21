@@ -47,11 +47,15 @@ const Signup = () => {
       <div className="flex w-[400px] flex-col items-center gap-4 rounded p-2 ">
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-2xl font-bold">
-            Welcome to <Logo />
+            Welcome to <Link href={`/home`}><Logo /></Link> 
           </h1>
           <p className="text-gray-600">Please signup to continue</p>
         </div>
-        {error && <p className="text-md text-red-500">{error.error||error.messasge}</p>}
+        {error && (
+          <p className="text-md text-red-500">
+            {error.error || error.messasge}
+          </p>
+        )}
         <form
           className="flex w-full flex-col items-center gap-4"
           onSubmit={handleSubmit(onSubmit)}

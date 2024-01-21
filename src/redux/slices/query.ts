@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  message:""
+  message: '',
 };
 
 const querySlice = createSlice({
@@ -9,8 +9,8 @@ const querySlice = createSlice({
   initialState,
   reducers: {
     setQuery(state, action) {
-        state.message = action.payload
-    }
+      state.message = action.payload;
+    },
   },
 });
 

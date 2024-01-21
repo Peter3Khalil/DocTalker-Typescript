@@ -13,13 +13,13 @@ const formatText = (text: string) => {
   });
   text = lines.join('\n');
   return text;
-}
+};
 
 type MessageBoxProps = {
   message: string;
   isBot?: boolean;
 };
-const MessageBox:FC<MessageBoxProps> = ({ message, isBot = false }) => {
+const MessageBox: FC<MessageBoxProps> = ({ message, isBot = false }) => {
   const [isDisplayed, setIsDisplayed] = useState<boolean>(false);
   useEffect(() => {
     setTimeout(() => {
@@ -48,7 +48,13 @@ const MessageBox:FC<MessageBoxProps> = ({ message, isBot = false }) => {
           <h1 className="text-md font-bold leading-none">
             {isBot ? 'Talker' : 'You'}
           </h1>
-          <p className="break-before-all text-sm whitespace-pre-line">{message.startsWith("Typing")?<h1 className='text-lg animate-pulse font-bold'>Typing...</h1>: formatText(message)}</p>
+          <p className="break-before-all whitespace-pre-line text-sm">
+            {message.startsWith('Typing') ? (
+              <h1 className="animate-pulse text-lg font-bold">Typing...</h1>
+            ) : (
+              formatText(message)
+            )}
+          </p>
         </div>
       </div>
     </div>

@@ -5,15 +5,15 @@ import { RootState } from '@/redux/store';
 
 type PDFViewerProps = {
   url: string;
-}
-const PDFViewer:FC<PDFViewerProps> = ({ url }) => {
-  const {isOpened} = useSelector((state:RootState) => state.document);
+};
+const PDFViewer: FC<PDFViewerProps> = ({ url }) => {
+  const { isOpened } = useSelector((state: RootState) => state.document);
   return (
     <div
       className={cn('h-full flex-1', {
         hidden: !isOpened,
       })}
-      id='pdf'
+      id="pdf"
     >
       <iframe
         src={`https://docs.google.com/viewer?url=${url}&embedded=true`}

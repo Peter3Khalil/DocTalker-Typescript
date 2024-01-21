@@ -12,17 +12,17 @@ import { Chat } from './ChatItem';
 import client from '@/utils/axios-util';
 import { useQuery } from 'react-query';
 
-const fetchChats =  () => {
-  return  client.get('/chat');
-}
+const fetchChats = () => {
+  return client.get('/chat');
+};
 const Sidebar = () => {
   const { isOpened } = useSelector((state: RootState) => state.sidebar);
   const dispatch: AppDispatch = useDispatch();
-  const {data} = useQuery('chats', fetchChats)
-  const [chats, setChats] = useState<Chat[]>([])
-useEffect(() => {
-setChats(data)
-},[data])
+  const { data } = useQuery('chats', fetchChats);
+  const [chats, setChats] = useState<Chat[]>([]);
+  useEffect(() => {
+    setChats(data);
+  }, [data]);
   return (
     <aside
       className={cn(

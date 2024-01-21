@@ -16,7 +16,7 @@ const useFetch = ({ url, method = 'GET' }: Props) => {
     setError(null);
     setIsSuccess(false);
     try {
-      const { data,status } = await axios.request({
+      const { data, status } = await axios.request({
         method,
         url: `${baseUrl}${url}`,
         data: body,
@@ -34,7 +34,7 @@ const useFetch = ({ url, method = 'GET' }: Props) => {
       setIsLoading(false);
     }
   };
-  return { data, isLoading, error, callApi,isSuccess };
+  return { data, isLoading, error, callApi, isSuccess };
 };
 
 export default useFetch;

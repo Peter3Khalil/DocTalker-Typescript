@@ -12,40 +12,47 @@ import client from '@/utils/axios-util';
 import { useRouter } from 'next/router';
 const ChatFooter = () => {
   const { isOpened } = useSelector((state: RootState) => state.document);
-  const router = useRouter();  
+  const router = useRouter();
   const mutation = useMutation({
     mutationFn: (data) => {
       return client.post('/query/query-process', data);
     },
   });
   const { isLoading } = mutation;
-  const {message} = useSelector((state: RootState) => state.query);
+  const { message } = useSelector((state: RootState) => state.query);
   const dispatch = useDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const isDisabled =message.trim() === '' || isLoading;
-  const handleOnchange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
+  const isDisabled = message.trim() === '' || isLoading;
+  const handleOnchange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch(setQuery(e.target.value));
   };
-  const handleOnSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (message.trim() === '') return;
-    dispatch(addMessage({
-     content:message,
-      role:"user"
-    }))
-    dispatch(setQuery(""));
+    dispatch(
+      addMessage({
+        content: message,
+        role: 'user',
+      }),
+    );
+    dispatch(setQuery(''));
     //Submit query
     try {
-      dispatch(addMessage({
-        content:"Typing...",
-        role:"assistant"
-      }))
-      const {response}:{response:any[]} = await mutation.mutateAsync({query:message,id:router.query.chatId})
-      console.log(response)
-      dispatch(popMessage())
-      dispatch(addMessage(response))
+      dispatch(
+        addMessage({
+          content: 'Typing...',
+          role: 'assistant',
+        }),
+      );
+      const { response }: { response: any[] } = await mutation.mutateAsync({
+        query: message,
+        id: router.query.chatId,
+      });
+      console.log(response);
+      dispatch(popMessage());
+      dispatch(addMessage(response));
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   const handleOnfocus = () => {
@@ -67,7 +74,7 @@ const ChatFooter = () => {
   useEffect(() => {
     if (textareaRef.current) textareaRef.current.focus();
   }, []);
-console.log(isLoading)
+  console.log(isLoading);
   return (
     <div
       className={cn('flex w-full shrink-0 items-center justify-center p-2', {

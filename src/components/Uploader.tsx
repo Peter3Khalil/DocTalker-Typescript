@@ -29,18 +29,20 @@ const uploadFile = async (file: File) => {
 };
 const processFile = async (chatId: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const { data } = await axios.post(`${baseUrl}/upload/process`, {id:chatId}, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+  const { data } = await axios.post(
+    `${baseUrl}/upload/process`,
+    { id: chatId },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     },
-  });
+  );
   return data;
 };
 const Uploader = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [serverError, setServerError] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<Error>({
     sizeError: false,
@@ -50,22 +52,20 @@ const Uploader = () => {
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setServerError('');
-    setIsSuccess(false);
     if (!file) return;
     try {
       const res = await uploadFile(file);
       setIsLoading(false);
-      setIsSuccess(true);
-      processFile(res.chatId).then(res=>{
-        console.log(res)
-      }).catch(error=>{
-        console.log(error)
-      })
+      processFile(res.chatId)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       router.push(`/chat/${res.chatId}`);
       //TODO: Save user data in State
     } catch (error) {
-      setServerError(error.response.data.error || error.response.data.message);
       alert(error.response.data.error || error.response.data.message);
       console.log(error);
       setIsLoading(false);
@@ -180,7 +180,6 @@ const Uploader = () => {
         ) : (
           'Upload'
         )}
-
       </Button>
     </form>
   );

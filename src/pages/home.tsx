@@ -1,11 +1,10 @@
-import CTA from "@/components/landingPageComponents/CTA";
-import Features from "@/components/landingPageComponents/Features";
-import Footer from "@/components/landingPageComponents/Footer";
-import Hero from "@/components/landingPageComponents/Hero";
-import Statistics from "@/components/landingPageComponents/Statistics";
-import Testimonials from "@/components/landingPageComponents/Testimonials";
-import Head from "next/head";
-
+import CTA from '@/components/landingPageComponents/CTA';
+import Features from '@/components/landingPageComponents/Features';
+import Footer from '@/components/landingPageComponents/Footer';
+import Hero from '@/components/landingPageComponents/Hero';
+import Statistics from '@/components/landingPageComponents/Statistics';
+import Testimonials from '@/components/landingPageComponents/Testimonials';
+import Head from 'next/head';
 
 export default function Home() {
   return (

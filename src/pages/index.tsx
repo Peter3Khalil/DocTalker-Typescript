@@ -4,16 +4,18 @@ import Logo from '@/components/shared/Logo';
 import React from 'react';
 console.log('Home');
 const Home = () => {
-  return <DashboardLayout isChatPage={false}>
-     <main className="flex h-full flex-1 items-center justify-center px-4 lg:p-0">
+  return (
+    <DashboardLayout isChatPage={false}>
+      <main className="flex h-full flex-1 items-center justify-center px-4 lg:p-0">
         <div className=" relative flex flex-col items-center gap-4">
-          <h1 className="text-2xl md:text-3xl font-bold">
+          <h1 className="text-2xl font-bold md:text-3xl">
             Welcome to <Logo />
           </h1>
           <Uploader />
         </div>
       </main>
-  </DashboardLayout>;
+    </DashboardLayout>
+  );
 };
 
 export default Home;

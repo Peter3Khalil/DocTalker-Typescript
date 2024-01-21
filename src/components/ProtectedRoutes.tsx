@@ -13,12 +13,11 @@ const ProtectedRoutes: FC<ProtectedRoutesProps> = ({ children }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/auth/login');
-      setIsAuth(false)
-    }else{
+      setIsAuth(false);
+    } else {
       //TODO: verify token
       setIsAuth(true);
     }
-    
   }, []);
   return <>{isAuth ? children : 'Redirecting...'}</>;
 };

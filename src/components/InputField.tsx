@@ -15,8 +15,7 @@ type InputFieldProps = {
   validator?: any;
 };
 
-
-const InputField:FC<InputFieldProps> = ({
+const InputField: FC<InputFieldProps> = ({
   type = 'text',
   label,
   name,
@@ -43,7 +42,7 @@ const InputField:FC<InputFieldProps> = ({
             id={id}
             placeholder={placeholder}
             className={cn(
-              'w-full rounded border p-2 text-md  outline-none focus:ring-1 focus:ring-primary',
+              'w-full rounded border-2 p-2 text-md  outline-none focus:ring-1 focus:ring-primary',
               {
                 'pr-10': type === 'password',
                 'border-destructive focus:ring-destructive': !!errorMsg,
@@ -64,7 +63,7 @@ const InputField:FC<InputFieldProps> = ({
   );
 };
 
-export const PasswordField:FC<InputFieldProps> = ({
+export const PasswordField: FC<InputFieldProps> = ({
   type = 'password',
   label,
   name,

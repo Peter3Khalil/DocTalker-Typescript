@@ -1,82 +1,75 @@
-import React, {  useEffect, useRef, useState } from "react"
-import { useRouter } from "next/router"
-import ChatContainer from "@/components/chat/ChatContainer"
-import PDFViewer from "@/components/chat/PDFViewer"
-import { cn } from "@/utils/helperFunctions"
-import DashboardLayout from "@/components/Layouts/DashboardLayout"
-import axios from "axios"
-import { useDispatch } from "react-redux"
-import { setMessages } from "@/redux/slices/messages"
-import client from "@/utils/axios-util"
-import { useQuery } from "react-query"
-const fetchChat  =  (chatId) => {
- return client.get(`/chat/${chatId}`)
-}
+import React, { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import ChatContainer from '@/components/chat/ChatContainer';
+import PDFViewer from '@/components/chat/PDFViewer';
+import DashboardLayout from '@/components/Layouts/DashboardLayout';
+import { useDispatch } from 'react-redux';
+import { setMessages } from '@/redux/slices/messages';
+import client from '@/utils/axios-util';
+import { useQuery } from 'react-query';
+const fetchChat = (chatId:string) => {
+  return client.get(`/chat/${chatId}`);
+};
 const Chat = () => {
-const router = useRouter()
-const { chatId } = router.query
-const [data, setData] = useState(null)
-const {data:res} = useQuery(['chat',chatId],()=> fetchChat(chatId))
-const dispatch = useDispatch()
+  const router = useRouter();
+  const { chatId } = router.query;
+  const [data, setData] = useState(null);
+  const { data: res } = useQuery(['chat', chatId], () => fetchChat(chatId));
+  const dispatch = useDispatch();
 
+  // Handle Navigation with taps
+  const mainContainerRef = useRef(null);
+  const observerRef = useRef(null);
 
+  useEffect(() => {
+    const mainContainer = mainContainerRef.current;
+    const children = mainContainer ? Array.from(mainContainer.children) : null;
 
-// Handle Navigation with taps
-const mainContainerRef = useRef(null)
-const observerRef = useRef(null)
-
-useEffect(() => {
-  const mainContainer = mainContainerRef.current
-  const children = mainContainer? Array.from(mainContainer.children):null
-
-  observerRef.current = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          document.querySelector("#pdfTap").classList.remove("visible")
-          if (entry.target.id === "chat") {
-            const chatTap = document.querySelector("#chatTap")
-            chatTap.classList.add("visible")
-          } else {
-            document.querySelector("#chatTap").classList.remove("visible")
-            const pdfTap = document.querySelector("#pdfTap")
-            pdfTap.classList.add("visible")
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            document.querySelector('#pdfTap').classList.remove('visible');
+            if (entry.target.id === 'chat') {
+              const chatTap = document.querySelector('#chatTap');
+              chatTap.classList.add('visible');
+            } else {
+              document.querySelector('#chatTap').classList.remove('visible');
+              const pdfTap = document.querySelector('#pdfTap');
+              pdfTap.classList.add('visible');
+            }
           }
-        }
-      })
-    },
-    { root: mainContainer, threshold: 0.5 },
-  )
+        });
+      },
+      { root: mainContainer, threshold: 0.5 },
+    );
 
-  children?.forEach((child) => observerRef.current.observe(child))
+    children?.forEach((child) => observerRef.current.observe(child));
 
-  return () => {
-    if (observerRef.current) {
-      children?.forEach((child) => observerRef.current.unobserve(child))
+    return () => {
+      if (observerRef.current) {
+        children?.forEach((child) => observerRef.current.unobserve(child));
+      }
+    };
+  }, [mainContainerRef.current]);
+  const goToChat = () => {
+    mainContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+  };
+  const goToPDF = () => {
+    mainContainerRef.current.scrollTo({
+      left: mainContainerRef.current.offsetWidth,
+      behavior: 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    if (res) {
+      setData(res);
+      dispatch(setMessages(res.messages));
     }
-  }
-}, [mainContainerRef.current])
-const goToChat = () => {
-  mainContainerRef.current.scrollTo({ left: 0, behavior: "smooth" })
-}
-const goToPDF = () => {
-  mainContainerRef.current.scrollTo({
-    left: mainContainerRef.current.offsetWidth,
-    behavior: "smooth",
-  })
-}
+  }, [res]);
 
-
-useEffect(() => {
-  if(res){
-    setData(res)
-    dispatch(setMessages(res.messages))
-    
-  }
-}, [res])
-
-
-//TODO: Make it mobile responsive
+  //TODO: Make it mobile responsive
   return (
     <DashboardLayout>
       <nav className="flex h-10 w-full shrink-0 items-center lg:hidden">
@@ -105,7 +98,7 @@ useEffect(() => {
         <PDFViewer url={data?.url} />
       </main>
     </DashboardLayout>
-  )
-}
+  );
+};
 
-export default Chat
+export default Chat;
