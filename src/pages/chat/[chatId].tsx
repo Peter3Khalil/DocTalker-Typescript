@@ -8,6 +8,7 @@ import { setMessages } from '@/redux/slices/messages';
 import client from '@/utils/axios-util';
 import { useQuery } from 'react-query';
 import { cn } from '@/utils/helperFunctions';
+import useObserver from '@/hooks/useObserver';
 const fetchChat = (chatId: string | undefined | string[]) => {
   return client.get(`/chat/${chatId}`);
 };
@@ -17,9 +18,23 @@ const Chat = () => {
   const [data, setData] = useState(null);
   const { data: res } = useQuery(['chat', chatId], () => fetchChat(chatId));
   const dispatch = useDispatch();
-  const chatRef = useRef(null);
-  const pdfRef = useRef(null);
-  const [activeTap,setActiveTap] = useState<null | string>(null)
+  const { visibleElement, setVisibleElement } = useObserver({
+    parentId: 'main',
+  });
+  const chatRef = useRef<HTMLDivElement>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
+  const goToChat = () => {
+    pdfRef.current?.classList.remove('visible');
+    chatRef.current?.classList.add('visible');
+    const parent = document.getElementById('main');
+    parent?.scrollTo({left:0,behavior:'smooth'});
+  };
+  const goToPDF = () => {
+    chatRef.current?.classList.remove('visible');
+    pdfRef.current?.classList.add('visible');
+    const parent = document.getElementById('main');
+    parent?.scrollTo({left:parent.scrollWidth,behavior:'smooth'});
+  }
   useEffect(() => {
     if (res) {
       setData(res);
@@ -27,49 +42,37 @@ const Chat = () => {
     }
   }, [res]);
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const {id} = entry.target
-            setActiveTap(id)
-          }
-        });
-      },
-      { threshold: 0.5 }, // Adjust this value as needed
-    );
-
-    if (chatRef.current) {
-      observer.observe(chatRef.current);
+    if (!visibleElement) return;
+    if (visibleElement.id == 'chat') {
+      pdfRef.current?.classList.remove('visible');
+      chatRef.current?.classList.add('visible');
+      console.log('chat');
     }
-
-    if (pdfRef.current) {
-      observer.observe(pdfRef.current);
+    if (visibleElement.id == 'pdf') {
+      chatRef.current?.classList.remove('visible');
+      pdfRef.current?.classList.add('visible');
+      console.log('pdf');
     }
-
-    return () => {
-      if (chatRef.current) {
-        observer.unobserve(chatRef.current);
-      }
-
-      if (pdfRef.current) {
-        observer.unobserve(pdfRef.current);
-      }
-    };
-  }, []);
-
-  //TODO: Make it mobile responsive
+  }, [visibleElement]);
   return (
     <DashboardLayout>
       <nav className="flex h-16 w-full bg-accent text-accent-foreground lg:hidden">
-        <div className={cn("flex flex-1 cursor-pointer items-center justify-center border-r-2",{
-          "border-b-primary border-b-2":activeTap==="chat"
-        })}>
+        <div
+          ref={chatRef}
+          className={cn(
+            'flex flex-1 cursor-pointer items-center justify-center border-r-2',
+          )}
+          onClick={goToChat}
+        >
           Chat
         </div>
-        <div className={cn("flex flex-1 cursor-pointer items-center justify-center border-r-2",{
-          "border-b-primary border-b-2":activeTap==="pdf"
-        })}>
+        <div
+          ref={pdfRef}
+          className={cn(
+            'flex flex-1 cursor-pointer items-center justify-center border-r-2',
+          )}
+          onClick={goToPDF}
+        >
           PDF
         </div>
       </nav>
@@ -77,12 +80,8 @@ const Chat = () => {
         id="main"
         className="whitespace-no-wrap flex h-full w-full snap-x snap-mandatory overflow-x-scroll bg-background text-accent-foreground lg:snap-none lg:overflow-hidden"
       >
-        <ChatContainer
-          ref={chatRef}
-          className="w-full flex-none snap-start lg:w-auto lg:flex-1"
-        />
+        <ChatContainer className="w-full flex-none snap-start lg:w-auto lg:flex-1" />
         <PDFViewer
-          ref={pdfRef}
           className="w-full flex-none snap-start lg:w-auto lg:flex-1"
           url={data?.url}
         />

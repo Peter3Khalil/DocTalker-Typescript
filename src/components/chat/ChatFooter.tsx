@@ -6,8 +6,8 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { RootState } from '@/redux/store';
 import { setQuery } from '@/redux/slices/query';
-import { addMessage, popMessage } from '@/redux/slices/messages';
-import { useMutation } from 'react-query';
+import { addMessage, popMessage, setMessages } from '@/redux/slices/messages';
+import { useMutation, useQuery } from 'react-query';
 import client from '@/utils/axios-util';
 import { useRouter } from 'next/router';
 
@@ -15,10 +15,20 @@ type Query = {
   id: string;
   query: string;
 }
-
+const clearMessages = (chatId:string) => {
+  return client.delete(`/chat/${chatId}/messages`);
+}
 const ChatFooter = () => {
   const { isOpened } = useSelector((state: RootState) => state.document);
   const router = useRouter();
+  const { chatId } = router.query;
+  const {data,refetch} = useQuery(['clearMessages', chatId], () => clearMessages(chatId as string),{
+    enabled: false,
+  });
+  const handleOnClick = () => {
+    refetch();
+    dispatch(setMessages([]));
+  }
   const mutation = useMutation({
     mutationFn: (data:Query) => {
       return client.post('/query/query-process', data);
@@ -80,13 +90,13 @@ const ChatFooter = () => {
   useEffect(() => {
     if (textareaRef.current) textareaRef.current.focus();
   }, []);
-  
   return (
     <div
-      className={cn('flex w-full shrink-0 items-center justify-center p-2', {
+      className={cn('flex gap-2 w-full shrink-0 items-center justify-center p-2', {
         'mx-auto lg:max-w-[50%]': !isOpened,
       })}
     >
+      
       <form
         id="form"
         onSubmit={handleOnSubmit}
