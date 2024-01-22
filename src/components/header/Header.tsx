@@ -1,6 +1,5 @@
 'use client';
 import React, { FC, memo } from 'react';
-import { CgProfile } from '../shared/Icons';
 import 'tippy.js/dist/tippy.css';
 import Logo from '../shared/Logo';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -28,9 +27,6 @@ const Header: FC<HeaderProps> = ({ isChatPage }) => {
       <div className="relative flex items-center gap-3">
         {isChatPage && <ViewDocument />}
         <ThemeSwitcher />
-        <button className="relative text-2xl  md:hidden" title="Profile">
-          <CgProfile />
-        </button>
         <button onClick={logout}>Logout</button>
       </div>
     </header>

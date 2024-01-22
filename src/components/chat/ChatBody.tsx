@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import MessageBox from './MessageBox';
 import { cn } from '../../utils/helperFunctions';
@@ -36,41 +36,5 @@ const ChatBody = () => {
     </div>
   );
 };
-const Arrow = () => {
-  const [isBottom, setIsBottom] = useState(false);
-  const handleScroll = () => {
-    const chatBody = document.getElementById('chatBody');
-    console.log(Number.parseInt(chatBody.scrollTop + chatBody.clientHeight));
-    console.log(chatBody.scrollHeight);
-    if (
-      Number.parseInt(chatBody.scrollTop + chatBody.clientHeight) ===
-      chatBody.scrollHeight
-    ) {
-      setIsBottom(true);
-    } else setIsBottom(false);
-  };
-  const goToBottom = () => {
-    const chatBody = document.getElementById('chatBody');
-    //Smooth scrolling
-    chatBody.scrollTo({
-      top: chatBody.scrollHeight + 100,
-      behavior: 'smooth',
-    });
-    setIsBottom(true);
-  };
-  useEffect(() => {
-    const chatBody = document.getElementById('chatBody');
-    chatBody.addEventListener('scroll', handleScroll);
-    return () => chatBody.removeEventListener('scroll', handleScroll);
-  }, []);
-  return (
-    <>
-      {!isBottom && (
-        <div onClick={goToBottom} className="absolute bottom-0 z-10">
-          Arrow
-        </div>
-      )}
-    </>
-  );
-};
+
 export default ChatBody;

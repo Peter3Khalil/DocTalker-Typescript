@@ -18,6 +18,7 @@ const ProtectedRoutes: FC<ProtectedRoutesProps> = ({ children }) => {
       //TODO: verify token
       setIsAuth(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <>{isAuth ? children : 'Redirecting...'}</>;
 };

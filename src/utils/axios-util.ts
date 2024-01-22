@@ -20,6 +20,10 @@ client.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    if (error.response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/auth/login';
+    }
     return error.response.message || error.response.data;
   },
 );

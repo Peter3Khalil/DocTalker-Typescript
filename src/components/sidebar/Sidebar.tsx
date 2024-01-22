@@ -15,13 +15,16 @@ import { useQuery } from 'react-query';
 const fetchChats = () => {
   return client.get('/chat');
 };
+
 const Sidebar = () => {
   const { isOpened } = useSelector((state: RootState) => state.sidebar);
   const dispatch: AppDispatch = useDispatch();
   const { data } = useQuery('chats', fetchChats);
   const [chats, setChats] = useState<Chat[]>([]);
   useEffect(() => {
-    setChats(data);
+    if (data) {
+      setChats(data);
+    }
   }, [data]);
   return (
     <aside
@@ -62,19 +65,4 @@ const Sidebar = () => {
   );
 };
 
-// const Profile = () => {
-//   const dispatch = useDispatch()
-//   return (
-//     <>
-//       <section className="mt-2 hidden h-16 w-full shrink-0 items-center bg-inherit px-2 md:flex">
-//         <div onClick={()=>dispatch(openModal())} className="flex w-full cursor-pointer items-center gap-1 rounded p-2 text-md hover:bg-muted/20 dark:hover:bg-muted-foreground/20">
-//           <CgProfile className="shrink-0 text-xl" />
-//           <p className="overflow-hidden">
-//             peterkhalilpeterkhalilpeterkhalilpeterkhalilpeterkhalilpeterkhalilpeterkhalilv@gmail.com
-//           </p>
-//         </div>
-//       </section>
-//     </>
-//   )
-// }
 export default memo(Sidebar);

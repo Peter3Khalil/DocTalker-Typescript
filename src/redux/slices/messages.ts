@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+type MessageType = {
+  role: string;
+  content:string;
+}
 
-const initialState = {
+const initialState:{messages:MessageType[]} = {
   messages: [],
 };
 

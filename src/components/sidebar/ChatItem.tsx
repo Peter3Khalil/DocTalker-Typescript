@@ -4,10 +4,10 @@ import { cn } from '../../utils/helperFunctions';
 import Link from 'next/link';
 export type Chat = {
   id: string;
-  name: string;
+  chatName: string;
 };
 
-const ChatItem: FC<Chat> = ({ id, name }) => {
+const ChatItem: FC<Chat> = ({ id, chatName }) => {
   const router = useRouter();
   const { chatId: activeChatId } = router.query;
   const isActive = activeChatId == id;
@@ -23,7 +23,7 @@ const ChatItem: FC<Chat> = ({ id, name }) => {
     >
       <Link href={`/chat/${id}`}>
         <p className="w-full overflow-hidden  text-ellipsis p-2 text-md leading-none">
-          {name}
+          {chatName}
         </p>
       </Link>
     </li>

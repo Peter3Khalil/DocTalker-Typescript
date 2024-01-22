@@ -12,11 +12,23 @@ import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useMutation } from 'react-query';
 
+type LoginData = {
+  email: string;
+  password: string;
+}
+type User  ={
+  token: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  id: string;
+}
+
 const Login = () => {
   const router = useRouter();
   const [error, setError] = useState<any>(null);
   const mutation = useMutation({
-    mutationFn: (data) => {
+    mutationFn: (data:LoginData) => {
       return client.post('/user/login', data);
     },
   });
@@ -27,7 +39,7 @@ const Login = () => {
   });
 
   const { errors, isValid } = formState;
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:LoginData) => {
     setError(null);
     try {
       const res = await mutation.mutateAsync(data);
@@ -36,7 +48,6 @@ const Login = () => {
         localStorage.setItem('token', res.token);
         return;
       }
-      console.log(res);
       setError('Invalid Credentials');
     } catch (error) {
       setError(error);

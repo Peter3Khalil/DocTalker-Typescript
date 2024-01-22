@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React from 'react';
 import ChatFooter from './ChatFooter';
 import ChatBody from './ChatBody';
 import { cn } from '../../utils/helperFunctions';

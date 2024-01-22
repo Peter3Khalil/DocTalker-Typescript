@@ -66,7 +66,7 @@ const Uploader = () => {
       router.push(`/chat/${res.chatId}`);
       //TODO: Save user data in State
     } catch (error) {
-      alert(error.response.data.error || error.response.data.message);
+      alert((error as any).response.data.error || (error as any).response.data.message);
       console.log(error);
       setIsLoading(false);
     } finally {

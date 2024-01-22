@@ -12,7 +12,7 @@ const ChatList: FC<ChatListProps> = ({ chats }) => {
           ? chats
               ?.reverse()
               .map((chat) => (
-                <ChatItem key={chat.id} name={chat.chatName} id={chat.id} />
+                <ChatItem key={chat.id} chatName={chat.chatName} id={chat.id} />
               ))
           : null}
       </ul>
