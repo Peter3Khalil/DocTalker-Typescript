@@ -7,7 +7,8 @@ import { useDispatch } from 'react-redux';
 import { setMessages } from '@/redux/slices/messages';
 import client from '@/utils/axios-util';
 import { useQuery } from 'react-query';
-const fetchChat = (chatId:string) => {
+import { cn } from '@/utils/helperFunctions';
+const fetchChat = (chatId: string | undefined | string[]) => {
   return client.get(`/chat/${chatId}`);
 };
 const Chat = () => {
@@ -16,86 +17,75 @@ const Chat = () => {
   const [data, setData] = useState(null);
   const { data: res } = useQuery(['chat', chatId], () => fetchChat(chatId));
   const dispatch = useDispatch();
-
-  // Handle Navigation with taps
-  const mainContainerRef = useRef(null);
-  const observerRef = useRef(null);
-
-  useEffect(() => {
-    const mainContainer = mainContainerRef.current;
-    const children = mainContainer ? Array.from(mainContainer.children) : null;
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            document.querySelector('#pdfTap').classList.remove('visible');
-            if (entry.target.id === 'chat') {
-              const chatTap = document.querySelector('#chatTap');
-              chatTap.classList.add('visible');
-            } else {
-              document.querySelector('#chatTap').classList.remove('visible');
-              const pdfTap = document.querySelector('#pdfTap');
-              pdfTap.classList.add('visible');
-            }
-          }
-        });
-      },
-      { root: mainContainer, threshold: 0.5 },
-    );
-
-    children?.forEach((child) => observerRef.current.observe(child));
-
-    return () => {
-      if (observerRef.current) {
-        children?.forEach((child) => observerRef.current.unobserve(child));
-      }
-    };
-  }, [mainContainerRef.current]);
-  const goToChat = () => {
-    mainContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-  };
-  const goToPDF = () => {
-    mainContainerRef.current.scrollTo({
-      left: mainContainerRef.current.offsetWidth,
-      behavior: 'smooth',
-    });
-  };
-
+  const chatRef = useRef(null);
+  const pdfRef = useRef(null);
+  const [activeTap,setActiveTap] = useState<null | string>(null)
   useEffect(() => {
     if (res) {
       setData(res);
       dispatch(setMessages(res.messages));
     }
   }, [res]);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const {id} = entry.target
+            setActiveTap(id)
+          }
+        });
+      },
+      { threshold: 0.5 }, // Adjust this value as needed
+    );
+
+    if (chatRef.current) {
+      observer.observe(chatRef.current);
+    }
+
+    if (pdfRef.current) {
+      observer.observe(pdfRef.current);
+    }
+
+    return () => {
+      if (chatRef.current) {
+        observer.unobserve(chatRef.current);
+      }
+
+      if (pdfRef.current) {
+        observer.unobserve(pdfRef.current);
+      }
+    };
+  }, []);
 
   //TODO: Make it mobile responsive
   return (
     <DashboardLayout>
-      <nav className="flex h-10 w-full shrink-0 items-center lg:hidden">
-        <div
-          id="chatTap"
-          onClick={goToChat}
-          className="flex h-full w-full cursor-pointer items-center justify-center border-r border-foreground/30 bg-muted px-4 text-muted-foreground"
-        >
+      <nav className="flex h-16 w-full bg-accent text-accent-foreground lg:hidden">
+        <div className={cn("flex flex-1 cursor-pointer items-center justify-center border-r-2",{
+          "border-b-primary border-b-2":activeTap==="chat"
+        })}>
           Chat
         </div>
-        <div
-          id="pdfTap"
-          onClick={goToPDF}
-          className="flex h-full w-full cursor-pointer items-center justify-center bg-muted px-4 text-muted-foreground"
-        >
+        <div className={cn("flex flex-1 cursor-pointer items-center justify-center border-r-2",{
+          "border-b-primary border-b-2":activeTap==="pdf"
+        })}>
           PDF
         </div>
       </nav>
-
       <main
         id="main"
-        ref={mainContainerRef}
-        className="flex h-full w-full snap-x snap-mandatory overflow-x-scroll bg-background text-accent-foreground lg:snap-none lg:overflow-hidden"
+        className="whitespace-no-wrap flex h-full w-full snap-x snap-mandatory overflow-x-scroll bg-background text-accent-foreground lg:snap-none lg:overflow-hidden"
       >
-        <ChatContainer />
-        <PDFViewer url={data?.url} />
+        <ChatContainer
+          ref={chatRef}
+          className="w-full flex-none snap-start lg:w-auto lg:flex-1"
+        />
+        <PDFViewer
+          ref={pdfRef}
+          className="w-full flex-none snap-start lg:w-auto lg:flex-1"
+          url={data?.url}
+        />
       </main>
     </DashboardLayout>
   );

@@ -130,5 +130,10 @@ iframe::-webkit-scrollbar {
 }
 
 
+#main::-webkit-scrollbar{
+  display: none;
+}
+
+
 
 
