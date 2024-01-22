@@ -39,7 +39,7 @@ const Sidebar = () => {
       {/* Sidebar content */}
       <div
         className={
-          'flex h-full flex-1 flex-col overflow-x-hidden whitespace-nowrap bg-foreground pt-3 text-background dark:bg-background dark:text-foreground '
+          'flex h-full flex-1 flex-col overflow-x-hidden whitespace-nowrap bg-foreground pt-3 text-background dark:bg-accent dark:text-accent-foreground '
         }
       >
         <section className="mb-4 w-full shrink-0 px-2">

@@ -27,7 +27,7 @@ const Header: FC<HeaderProps> = ({ isChatPage }) => {
       <div className="relative flex items-center gap-3">
         {isChatPage && <ViewDocument />}
         <ThemeSwitcher />
-        <button onClick={logout}>Logout</button>
+        <button className='bg-primary text-primary-foreground p-2 rounded' onClick={logout}>Logout</button>
       </div>
     </header>
   );
