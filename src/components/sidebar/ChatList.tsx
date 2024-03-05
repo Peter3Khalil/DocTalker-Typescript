@@ -9,11 +9,9 @@ const ChatList: FC<ChatListProps> = ({ chats }) => {
     <nav>
       <ul className=" w-full overflow-y-auto pr-1" id="chatList">
         {chats?.length !== 0
-          ? chats
-              ?.reverse()
-              .map((chat) => (
-                <ChatItem key={chat.id} chatName={chat.chatName} id={chat.id} />
-              ))
+          ? chats?.map((chat) => (
+              <ChatItem key={chat.id} chatName={chat.chatName} id={chat.id} />
+            )).reverse()
           : null}
       </ul>
     </nav>
